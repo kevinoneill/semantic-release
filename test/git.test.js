@@ -89,9 +89,9 @@ test.serial('Verify if the commit `sha` is in the direct history of the current 
   const otherCommits = await gitCommits(['Second']);
   await gitCheckout('master', false);
 
-  t.true(await isRefInHistory(commits[0].hash));
-  t.falsy(await isRefInHistory(otherCommits[0].hash));
-  await t.throws(isRefInHistory('non-existant-sha'));
+  t.true(await isRefInHistory(commits[0].hash, 'master'));
+  t.falsy(await isRefInHistory(otherCommits[0].hash, 'master'));
+  await t.throws(isRefInHistory('non-existant-sha', 'master'));
 });
 
 test.serial('Get the commit sha for a given tag or falsy if the tag does not exists', async t => {

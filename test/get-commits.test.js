@@ -25,7 +25,7 @@ test.serial('Get all commits when there is no last release', async t => {
   const commits = await gitCommits(['First', 'Second']);
 
   // Retrieve the commits with the commits module
-  const result = await getCommits(undefined, 'master', t.context.logger);
+  const result = await getCommits(undefined, 'HEAD', 'master', t.context.logger);
 
   // Verify the commits created and retrieved by the module are identical
   t.is(result.length, 2);
@@ -39,7 +39,7 @@ test.serial('Get all commits since gitHead (from lastRelease)', async t => {
   const commits = await gitCommits(['First', 'Second', 'Third']);
 
   // Retrieve the commits with the commits module, since commit 'First'
-  const result = await getCommits(commits[commits.length - 1].hash, 'master', t.context.logger);
+  const result = await getCommits(commits[commits.length - 1].hash, 'HEAD', 'master', t.context.logger);
 
   // Verify the commits created and retrieved by the module are identical
   t.is(result.length, 2);
@@ -55,7 +55,7 @@ test.serial('Get all commits since gitHead (from lastRelease) on a detached head
   await gitDetachedHead(repo, commits[1].hash);
 
   // Retrieve the commits with the commits module, since commit 'First'
-  const result = await getCommits(commits[commits.length - 1].hash, 'master', t.context.logger);
+  const result = await getCommits(commits[commits.length - 1].hash, 'HEAD', 'master', t.context.logger);
 
   // Verify the module retrieved only the commit 'feat: Second' (included in the detached and after 'fix: First')
   t.is(result.length, 1);
@@ -73,7 +73,7 @@ test.serial('Return empty array if lastRelease.gitHead is the last commit', asyn
   const commits = await gitCommits(['First', 'Second']);
 
   // Retrieve the commits with the commits module, since commit 'Second' (therefore none)
-  const result = await getCommits(commits[0].hash, 'master', t.context.logger);
+  const result = await getCommits(commits[0].hash, 'HEAD', 'master', t.context.logger);
 
   // Verify no commit is retrieved
   t.deepEqual(result, []);
@@ -84,8 +84,10 @@ test.serial('Return empty array if there is no commits', async t => {
   await gitRepo();
 
   // Retrieve the commits with the commits module
-  const result = await getCommits(undefined, 'master', t.context.logger);
+  const result = await getCommits(undefined, 'HEAD', 'master', t.context.logger);
 
   // Verify no commit is retrieved
   t.deepEqual(result, []);
 });
+
+// FIXME add test with `to`
